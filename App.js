@@ -40,10 +40,12 @@ const styles = StyleSheet.create({
     fontSize: 20,
     textAlign: 'center',
     margin: 10,
+    fontFamily: 'Lora-Bold',
   },
   instructions: {
     textAlign: 'center',
     color: '#333333',
     marginBottom: 5,
+    fontFamily: 'Lato-Bold'
   },
 });
