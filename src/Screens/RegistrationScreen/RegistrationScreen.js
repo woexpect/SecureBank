@@ -10,17 +10,61 @@ import {
     Dimensions,
     Image,
     StatusBar,
-    TextInput,
-    TouchableOpacity
+    TouchableOpacity,
+    Switch
 } from 'react-native';
 //================================ Component Importation ================================
+import DateTimePicker from "react-native-modal-datetime-picker";
+import TopLogo from "../../Components/TopLogo/TopLogo";
+import CTAButton from '../../Components/CTAButton/CTAButton';
+import SecondaryButton from '../../Components/SecondaryButton/SecondaryButton';
+import CustomInputText from '../../Components/CustomInputText/CustomInputText';
 //================================ Multimedia Importation ================================
-import shell from '../../resources/shell.png';
+import calendarIcon from '../../resources/icons/calendar.png';
 //================================ End of imports ================================
 const DEVICE_WIDTH = Dimensions.get("window").width;
 const DEVICE_HEIGHT = Dimensions.get("window").height;
 
 export default class RegistrationScreen extends Component {
+
+    state = {
+        isDateTimePickerVisible: false,
+        pickedDate: undefined,
+        tcConditionsAcceptance: false
+    }
+
+    showDateTimePicker = () => {
+        this.setState({ isDateTimePickerVisible: true });
+    };
+
+    hideDateTimePicker = () => {
+        this.setState({ isDateTimePickerVisible: false });
+    };
+
+    handleDatePicked = date => {
+        let datePicked = date.getDate() + '-' + (date.getMonth() + 1) + '-' + date.getFullYear();
+        console.log("picked date: " + datePicked);
+        this.hideDateTimePicker();
+        this.setState({
+            pickedDate: datePicked
+        })
+    };
+
+    toggleTC = () => {
+        if (this.state.tcConditionsAcceptance) {
+            this.setState({
+                tcConditionsAcceptance: false
+            });
+        } else {
+            this.setState({
+                tcConditionsAcceptance: true
+            });
+        }
+    }
+
+    alertWithDate = () => {
+        alert(this.state.pickedDate);
+    }
 
     componentDidMount() {
         Platform.OS == 'ios' ? undefined : StatusBar.setBackgroundColor('#FFFFFF', true);
@@ -28,49 +72,47 @@ export default class RegistrationScreen extends Component {
     }
 
     render() {
-        let underline = Platform.OS == 'ios' ? (<View style={styles.underlineLike}></View>) : (<View />);
         return (
             <View style={styles.main}>
                 <View style={[styles.contentContainer, Platform.OS == 'ios' ? { marginTop: 16 } : undefined]}>
-                    <View style={styles.logoContainer}>
-                        <Image source={shell} style={styles.logoStyle} resizeMode={'contain'} />
-                        <Text style={styles.logoFont}>Secure Bank</Text>
-                    </View>
+                    {/* Date picker */}
+                    <DateTimePicker
+                        isVisible={this.state.isDateTimePickerVisible}
+                        onConfirm={this.handleDatePicked}
+                        onCancel={this.hideDateTimePicker}
+                    />
+                    {/* SB Logo */}
+                    <TopLogo />
+                    {/* Welcome text */}
                     <View style={styles.textBanner}>
                         <Text style={styles.titleBig}>Bienvenido.</Text>
                         <Text style={styles.grayTextBig}>Por favor regístrate para acceder a nuestros servicios.</Text>
                     </View>
+                    {/* Form inputs */}
                     <View style={styles.formContainer}>
                         <View style={styles.nameLnContainer}>
-                            <View style={{width: '50%'}}>
-                                <Text style={styles.placeholderLike}>NOMBRE</Text>
-                                <TextInput style={[styles.textInputStyle, Platform.OS == 'ios' ? { paddingTop: 18, height: '64%', } : undefined]}
-                                    underlineColorAndroid="#7EBC89"></TextInput>
-                                {
-                                    underline
-                                }
+                            <View style={{ width: '50%' }}>
+                                <CustomInputText itPlaceholderColor={"#959595"} underlineColor={"#7EBC89"} label={"NOMBRE"} keyboardType={"default"} mandatory={true} aditionalStyle={{ width: '90%' }} />
                             </View>
                             <View style={{ width: '50%' }}>
-                                <Text style={styles.placeholderLike}>APELLIDO</Text>
-                                <TextInput style={[styles.textInputStyle, Platform.OS == 'ios' ? { paddingTop: 18, height: '64%', } : undefined]}
-                                    underlineColorAndroid="#7EBC89"></TextInput>
-                                {
-                                    underline
-                                }
+                                <CustomInputText itPlaceholderColor={"#959595"} underlineColor={"#7EBC89"} label={"APELLIDO"} keyboardType={"default"} mandatory={true}  />
                             </View>
                         </View>
-                        <Text style={[styles.placeholderLike, {marginTop: DEVICE_HEIGHT * 0.02}]}>N° IDENTIFICACIÓN</Text>
-                        <TextInput style={[styles.textInputStyle, Platform.OS == 'ios' ? { paddingTop: 18, height: '64%', } : undefined]}
-                            underlineColorAndroid="#7EBC89"></TextInput>
-                        {
-                            underline
-                        }                        
-                        <TouchableOpacity style={styles.ctaButton}>
-                            <Text style={styles.ctaButtonText}>Ingresa</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.secondaryButton}>
-                            <Text style={styles.secondaryButtonText}>Crear una cuenta</Text>
-                        </TouchableOpacity>
+                        <CustomInputText itPlaceholderColor={"#959595"} underlineColor={"#7EBC89"} label={"N° IDENTIFICACIÓN"} keyboardType={"number-pad"} mandatory={true} aditionalStyle={{ marginTop: DEVICE_HEIGHT * 0.02 }} />
+                        <View>
+                            <CustomInputText tiValue={this.state.pickedDate} itPlaceholderColor={"#959595"} underlineColor={"#7EBC89"} label={"FECHA DE NACIMIENTO"} keyboardType={"number-pad"} mandatory={true} aditionalStyle={{ marginTop: DEVICE_HEIGHT * 0.02 }} />
+                            <TouchableOpacity style={styles.calendarContainer} onPress={this.showDateTimePicker}>
+                                <Image source={calendarIcon} style={styles.calendarIconStyle} />
+                            </TouchableOpacity>
+                        </View>
+                        {/* T&C */}
+                        <View style={styles.tcConditions}>
+                            <Switch value={this.state.tcConditionsAcceptance} onValueChange={this.toggleTC} />
+                            <Text style={[styles.txText]}>Acepto los términos y condiciones al registrarme en la base de datos de Secure Bank. <Text style={{ color: '#FE5D26' }}>*</Text></Text>
+                        </View>
+                        {/* Buttons */}
+                        <CTAButton aditionalStyle={{ marginTop: DEVICE_HEIGHT * 0.08 }} buttonColor={"#7EBC89"} buttonTextColor={"#FFFFFF"} label={"Regístrate"} onPress={this.alertWithDate} />
+                        <SecondaryButton buttonTextColor={"#7EBC89"} label={"Regresar a inicio de sesión"} onPress={this.alertWithDate} />
                     </View>
                 </View>
             </View>
@@ -90,23 +132,6 @@ const styles = StyleSheet.create({
         //backgroundColor: 'tomato',
         width: DEVICE_WIDTH * 0.8443,
         height: DEVICE_HEIGHT * 0.92224
-    },
-    logoContainer: {
-        width: '100%',
-        height: DEVICE_HEIGHT * 0.068,
-        //backgroundColor: 'gray',
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    logoStyle: {
-        height: '100%',
-        width: DEVICE_HEIGHT * 0.056,
-    },
-    logoFont: {
-        fontFamily: 'Lora-Bold',
-        fontSize: DEVICE_HEIGHT * 0.032,
-        marginLeft: DEVICE_HEIGHT * 0.024,
-        color: '#1C2C1F'
     },
     textBanner: {
         width: '100%',
@@ -132,44 +157,31 @@ const styles = StyleSheet.create({
     nameLnContainer: {
         flexDirection: 'row'
     },
-    placeholderLike: {
-        color: '#959595',
+    calendarContainer: {
+        width: '100%',
+        height: '100%',
+        position: 'absolute',
+        alignItems: 'flex-end',
+        justifyContent: 'flex-end'
+    },
+    calendarIconStyle: {
+        width: DEVICE_HEIGHT * 0.032,
+        height: DEVICE_HEIGHT * 0.032,
+        marginBottom: 16,
+    },
+    tcConditions: {
+        width: '100%',
+        height: DEVICE_HEIGHT * 0.068,
+        //backgroundColor: 'tomato',
+        marginTop: DEVICE_HEIGHT * 0.04,
+        flexDirection: 'row'
+    },
+    txText: {
         fontFamily: 'Lato',
-        fontSize: DEVICE_HEIGHT * 0.02,
+        color: '#959595',
+        fontSize: DEVICE_HEIGHT * 0.016,
+        width: '70%',
+        height: '100%',
+        marginLeft: '8%'
     },
-    textInputStyle: {
-        //backgroundColor: 'green',
-        width: '100%',
-        height: '80%',
-    },
-    underlineLike: {
-        width: '88%',
-        height: 1,
-        backgroundColor: '#7EBC89'
-    },
-    ctaButton: {
-        backgroundColor: '#7EBC89',
-        width: '100%',
-        height: DEVICE_HEIGHT * 0.0583,
-        borderTopLeftRadius: DEVICE_HEIGHT * 0.0182,
-        borderBottomRightRadius: DEVICE_HEIGHT * 0.0182,
-        marginTop: DEVICE_HEIGHT * 0.08,
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    ctaButtonText: {
-        fontFamily: 'Lato-Bold',
-        color: '#FFFFFF',
-        fontSize: DEVICE_HEIGHT * 0.024,
-    },
-    secondaryButton: {
-        width: '100%',
-        height: DEVICE_HEIGHT * 0.0583,
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    secondaryButtonText: {
-        fontFamily: 'Lato-Regular',
-        color: '#7EBC89',
-    }
 });

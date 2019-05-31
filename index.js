@@ -4,7 +4,6 @@ import LoginScreen from './src/Screens/LoginScreen/LoginScreen';
 import RegistrationScreen from './src/Screens/RegistrationScreen/RegistrationScreen';
 import MainScreen from './src/Screens/MainScreen/MainScreen';
 //================================ End of imports ================================
-
 //================================ Screen Registration for RNN ================================
 Navigation.registerComponent('navigation.secure.bank.LoginScreen', () => LoginScreen);
 Navigation.registerComponent('navigation.secure.bank.RegistrationScreen', () => RegistrationScreen);
@@ -16,7 +15,7 @@ Navigation.events().registerAppLaunchedListener(() => {
             stack: {
                 children: [{
                     component: {
-                        name: "navigation.secure.bank.MainScreen"
+                        name: "navigation.secure.bank.RegistrationScreen"
                     }
                 }],
                 options: {
