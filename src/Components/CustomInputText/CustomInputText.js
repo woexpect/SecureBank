@@ -19,11 +19,12 @@ export default class CustomInputText extends Component {
     }
 
     render() {
+        let placeholderStyle = this.props.small ? styles.placeholderLikeSmall : styles.textInputStyle;
         let underline = Platform.OS == 'ios' ? (<View style={[styles.underlineLike, { backgroundColor: this.props.underlineColor}]}></View>) : (<View />);
         let mandatory = this.props.mandatory ? (<Text style={{ color: '#FE5D26' }}>*</Text>) : undefined;
         return (
             <View style={[styles.main, this.props.aditionalStyle]}>
-                <Text style={[styles.placeholderLike, { color: this.props.itPlaceholderColor }]}>{this.props.label} {mandatory}</Text>
+                <Text style={[placeholderStyle, { color: this.props.itPlaceholderColor }]}>{this.props.label} {mandatory}</Text>
                 <TextInput style={[styles.textInputStyle, Platform.OS == 'ios' ? { paddingTop: 18, height: '64%', } : undefined]}
                     underlineColorAndroid={this.props.underlineColor}
                     secureTextEntry={this.props.password}
@@ -43,6 +44,10 @@ const styles = StyleSheet.create({
     placeholderLike: {
         fontFamily: 'Lato',
         fontSize: DEVICE_HEIGHT * 0.02,
+    },
+    placeholderLikeSmall: {
+        fontFamily: 'Lato',
+        fontSize: DEVICE_HEIGHT * 0.016,
     },
     textInputStyle: {
         //backgroundColor: 'green',

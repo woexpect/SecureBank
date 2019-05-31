@@ -8,14 +8,15 @@ import {
     Text,
     View,
     Dimensions,
-    Image,
+    ScrollView,
     StatusBar,
-    TextInput,
-    TouchableOpacity
 } from 'react-native';
 //================================ Component Importation ================================
+import TopLogo from '../../Components/TopLogo/TopLogo';
+import CTAButton from '../../Components/CTAButton/CTAButton';
+import ProductCard from '../../Components/ProductCard/ProductCard';
+import FABMenu from '../../Components/FABMenu/FABMenu';
 //================================ Multimedia Importation ================================
-import shell from '../../resources/shell.png';
 //================================ End of imports ================================
 const DEVICE_WIDTH = Dimensions.get("window").width;
 const DEVICE_HEIGHT = Dimensions.get("window").height;
@@ -23,23 +24,30 @@ const DEVICE_HEIGHT = Dimensions.get("window").height;
 export default class MainScreen extends Component {
 
     componentDidMount() {
-        Platform.OS == 'ios' ? undefined : StatusBar.setBackgroundColor('#FFFFFF', true);
+        Platform.OS == 'ios' ? undefined : StatusBar.setBackgroundColor('#FAFAFA', true);
         StatusBar.setBarStyle('dark-content', true);
     }
 
     render() {
-        let underline = Platform.OS == 'ios' ? (<View style={styles.underlineLike}></View>) : (<View />);
         return (
             <View style={styles.main}>
+                <FABMenu />
                 <View style={[styles.contentContainer, Platform.OS == 'ios' ? { marginTop: 16 } : undefined]}>
-                    <View style={styles.logoContainer}>
-                        <Image source={shell} style={styles.logoStyle} resizeMode={'contain'} />
-                        <Text style={styles.logoFont}>Secure Bank</Text>
-                    </View>
+                    <TopLogo small={true} />
                     <View style={styles.textBanner}>
                         <Text style={styles.titleBig}>Tus productos, Carlos.</Text>
                         <Text style={styles.grayTextBig}>A continuación se muestra la lista de productos financieros que has adquirido con nuestra entidad al día de hoy.</Text>
                     </View>
+                    <View style={styles.scrollContainer}>
+                        <ScrollView >
+                            <ProductCard />
+                            <ProductCard />
+                            <ProductCard />
+                            <ProductCard />
+                            <ProductCard />
+                        </ScrollView>
+                    </View>
+                    <CTAButton small={true} buttonColor={"#FE5D26"} buttonTextColor={"#FFFFFF"} label={"SOLICITAR NUEVO CRÉDITO"} onPress={this.alertWithDate} />
                 </View>
             </View>
         );
@@ -59,23 +67,6 @@ const styles = StyleSheet.create({
         width: DEVICE_WIDTH * 0.8443,
         height: DEVICE_HEIGHT * 0.92224
     },
-    logoContainer: {
-        width: '100%',
-        height: DEVICE_HEIGHT * 0.068,
-        //backgroundColor: 'gray',
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    logoStyle: {
-        height: '100%',
-        width: DEVICE_HEIGHT * 0.032,
-    },
-    logoFont: {
-        fontFamily: 'Lora-Bold',
-        fontSize: DEVICE_HEIGHT * 0.024,
-        marginLeft: DEVICE_HEIGHT * 0.024,
-        color: '#1C2C1F'
-    },
     textBanner: {
         width: '100%',
         height: DEVICE_HEIGHT * 0.1908,
@@ -93,4 +84,9 @@ const styles = StyleSheet.create({
         fontSize: DEVICE_HEIGHT * 0.016,
         marginTop: DEVICE_HEIGHT * 0.024,
     },
+    scrollContainer: {
+        width: '100%',
+        height: DEVICE_HEIGHT * 0.467,
+        //backgroundColor: 'tomato'
+    }
 });

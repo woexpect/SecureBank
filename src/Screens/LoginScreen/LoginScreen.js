@@ -8,7 +8,6 @@ import {
     Text,
     View,
     Dimensions,
-    Image,
     StatusBar
 } from 'react-native';
 //================================ Component Importation ================================
@@ -17,7 +16,6 @@ import CTAButton from '../../Components/CTAButton/CTAButton';
 import SecondaryButton from '../../Components/SecondaryButton/SecondaryButton';
 import CustomInputText from '../../Components/CustomInputText/CustomInputText';
 //================================ Multimedia Importation ================================
-import shell from '../../resources/shell.png';
 //================================ End of imports ================================
 const DEVICE_WIDTH = Dimensions.get("window").width;
 const DEVICE_HEIGHT = Dimensions.get("window").height;

@@ -19,10 +19,12 @@ export default class CustomInputText extends Component {
     }
 
     render() {
+        let logoStyle = this.props.small ? styles.logoStyleSmall : styles.logoStyle;
+        let logoFontStyle = this.props.small ? styles.logoFontSmall : styles.logoFont;
         return (
             <View style={styles.logoContainer}>
-                <Image source={shell} style={styles.logoStyle} resizeMode={'contain'} />
-                <Text style={styles.logoFont}>Secure Bank</Text>
+                <Image source={shell} style={logoStyle} resizeMode={'contain'} />
+                <Text style={logoFontStyle}>Secure Bank</Text>
             </View>
         );
     }
@@ -43,6 +45,16 @@ const styles = StyleSheet.create({
     logoFont: {
         fontFamily: 'Lora-Bold',
         fontSize: DEVICE_HEIGHT * 0.032,
+        marginLeft: DEVICE_HEIGHT * 0.024,
+        color: '#1C2C1F'
+    },
+    logoStyleSmall: {
+        height: '100%',
+        width: DEVICE_HEIGHT * 0.032,
+    },
+    logoFontSmall: {
+        fontFamily: 'Lora-Bold',
+        fontSize: DEVICE_HEIGHT * 0.024,
         marginLeft: DEVICE_HEIGHT * 0.024,
         color: '#1C2C1F'
     },

@@ -17,11 +17,12 @@ export default class CTAButton extends Component {
     }
 
     render() {
+        let smallStyle = this.props.small ? styles.ctaButtonTextSmall : styles.ctaButtonText;
         return (
             <TouchableOpacity
                 style={[styles.ctaButton, { backgroundColor: this.props.buttonColor }, this.props.aditionalStyle]}
                 onPress={this.onPressAction}>
-                <Text style={[styles.ctaButtonText, { color: this.props.buttonTextColor }]}>{this.props.label}</Text>
+                <Text style={[smallStyle, { color: this.props.buttonTextColor }]}>{this.props.label}</Text>
             </TouchableOpacity>
         );
     }
@@ -41,5 +42,10 @@ const styles = StyleSheet.create({
         fontFamily: 'Lato-Bold',
         color: '#FFFFFF',
         fontSize: DEVICE_HEIGHT * 0.024,
+    },
+    ctaButtonTextSmall: {
+        fontFamily: 'Lato-Bold',
+        color: '#FFFFFF',
+        fontSize: DEVICE_HEIGHT * 0.016,
     },
 });
