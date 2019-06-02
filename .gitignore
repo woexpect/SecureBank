@@ -3,7 +3,6 @@
 node_modules/
 # ======== Android related baned content ========
 # Built application files
-*.apk
 *.ap_
 *.aab
 
