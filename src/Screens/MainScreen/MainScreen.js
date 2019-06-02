@@ -12,6 +12,7 @@ import {
     StatusBar,
 } from 'react-native';
 //================================ Component Importation ================================
+import { Navigation } from "react-native-navigation";
 import TopLogo from '../../Components/TopLogo/TopLogo';
 import CTAButton from '../../Components/CTAButton/CTAButton';
 import ProductCard from '../../Components/ProductCard/ProductCard';
@@ -26,6 +27,23 @@ export default class MainScreen extends Component {
     componentDidMount() {
         Platform.OS == 'ios' ? undefined : StatusBar.setBackgroundColor('#FAFAFA', true);
         StatusBar.setBarStyle('dark-content', true);
+    }
+
+    toNewCreditScreen = () => {
+        Navigation.push(this.props.componentId, {
+            component: {
+                name: 'navigation.secure.bank.CreditFormScreen',
+                passProps: {
+                    text: 'Pushed screen'
+                },
+                options: {
+                    topBar: {
+                        visible: false,
+                        height: 0
+                    }
+                }
+            }
+        });
     }
 
     render() {
@@ -47,7 +65,7 @@ export default class MainScreen extends Component {
                             <ProductCard />
                         </ScrollView>
                     </View>
-                    <CTAButton small={true} buttonColor={"#FE5D26"} buttonTextColor={"#FFFFFF"} label={"SOLICITAR NUEVO CRÉDITO"} onPress={this.alertWithDate} />
+                    <CTAButton small={true} buttonColor={"#FE5D26"} buttonTextColor={"#FFFFFF"} label={"SOLICITAR NUEVO CRÉDITO"} onPress={this.toNewCreditScreen} />
                 </View>
             </View>
         );
@@ -84,7 +102,7 @@ const styles = StyleSheet.create({
         fontSize: DEVICE_HEIGHT * 0.016,
         marginTop: DEVICE_HEIGHT * 0.024,
     },
-    scrollContainer: {
+    scrollContainer: {
         width: '100%',
         height: DEVICE_HEIGHT * 0.467,
         //backgroundColor: 'tomato'

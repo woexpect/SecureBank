@@ -11,6 +11,7 @@ import {
     StatusBar
 } from 'react-native';
 //================================ Component Importation ================================
+import { Navigation } from "react-native-navigation";
 import TopLogo from "../../Components/TopLogo/TopLogo";
 import CTAButton from '../../Components/CTAButton/CTAButton';
 import SecondaryButton from '../../Components/SecondaryButton/SecondaryButton';
@@ -21,14 +22,51 @@ const DEVICE_WIDTH = Dimensions.get("window").width;
 const DEVICE_HEIGHT = Dimensions.get("window").height;
 
 export default class LoginScreen extends Component {
-
+    
     componentDidMount() {
         Platform.OS == 'ios' ? undefined : StatusBar.setBackgroundColor('#FFFFFF', true);
         StatusBar.setBarStyle('dark-content', true);
     }
 
-    alertOnPress = () => {
-        alert("Holi");
+    goToMainPage = () => {
+        Navigation.setStackRoot(this.props.componentId, [
+            {
+                component: {
+                    name: 'navigation.secure.bank.MainScreen',
+                    options: {
+                        animations: {
+                            setStackRoot: {
+                                enabled: true
+                            }
+                        },
+                        topBar: {
+                            visible: false,
+                            height: 0
+                        }
+                    }
+                }
+            }
+        ]);
+    }
+
+    goToRegistrationScreen = () => {
+        Navigation.setRoot({
+            root: {
+                stack: {
+                    children: [{
+                        component: {
+                            name: "navigation.secure.bank.RegistrationScreen"
+                        }
+                    }],
+                    options: {
+                        topBar: {
+                            visible: false,
+                            height: 0
+                        }
+                    }
+                }
+            }
+        });
     }
 
     render() {
@@ -54,8 +92,8 @@ export default class LoginScreen extends Component {
                             aditionalStyle={{ marginTop: 24 }}
                             keyboardType={"default"}
                             password={true} />
-                        <CTAButton aditionalStyle={{ marginTop: DEVICE_HEIGHT * 0.08 }} buttonColor={"#7EBC89"} buttonTextColor={"#FFFFFF"} label={"Ingresa"} onPress={this.alertOnPress} />
-                        <SecondaryButton buttonTextColor={"#7EBC89"} label={"Crear una cuenta"} onPress={this.alertOnPress} />
+                        <CTAButton aditionalStyle={{ marginTop: DEVICE_HEIGHT * 0.08 }} buttonColor={"#7EBC89"} buttonTextColor={"#FFFFFF"} label={"Ingresa"} onPress={this.goToMainPage} />
+                        <SecondaryButton buttonTextColor={"#7EBC89"} label={"Crear una cuenta"} onPress={this.goToRegistrationScreen} />
                     </View>
                 </View>
             </View>

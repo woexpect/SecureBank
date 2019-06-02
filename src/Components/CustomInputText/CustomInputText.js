@@ -18,8 +18,12 @@ export default class CustomInputText extends Component {
         this.props.onPress();
     }
 
+    onChangeTextAction = (text) => {
+        this.props.onChangeText(text);
+    }
+
     render() {
-        let placeholderStyle = this.props.small ? styles.placeholderLikeSmall : styles.textInputStyle;
+        let placeholderStyle = this.props.small ? styles.placeholderLikeSmall : styles.placeholderLike;
         let underline = Platform.OS == 'ios' ? (<View style={[styles.underlineLike, { backgroundColor: this.props.underlineColor}]}></View>) : (<View />);
         let mandatory = this.props.mandatory ? (<Text style={{ color: '#FE5D26' }}>*</Text>) : undefined;
         return (
@@ -28,7 +32,8 @@ export default class CustomInputText extends Component {
                 <TextInput style={[styles.textInputStyle, Platform.OS == 'ios' ? { paddingTop: 18, height: '64%', } : undefined]}
                     underlineColorAndroid={this.props.underlineColor}
                     secureTextEntry={this.props.password}
-                    keyboardType={this.props.keyboardType}>{this.props.tiValue}</TextInput>
+                    keyboardType={this.props.keyboardType}
+                    onChangeText={(text) => this.onChangeTextAction(text)}>{this.props.tiValue}</TextInput>
                 {
                     underline
                 }

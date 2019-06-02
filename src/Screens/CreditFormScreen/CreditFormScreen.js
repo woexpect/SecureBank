@@ -10,13 +10,16 @@ import {
     Dimensions,
     StatusBar,
     TouchableOpacity,
-    Image
+    Image,
+    Alert
 } from 'react-native';
 //================================ Component Importation ================================
+import { Navigation } from "react-native-navigation";
 import DateTimePicker from "react-native-modal-datetime-picker";
 import TopLogo from '../../Components/TopLogo/TopLogo';
 import CTAButton from '../../Components/CTAButton/CTAButton';
 import CustomInputText from '../../Components/CustomInputText/CustomInputText';
+import Validations from '../../Components/LogicalComponents/Validations';
 //================================ Multimedia Importation ================================
 import calendarIcon from '../../resources/icons/calendar.png';
 //================================ End of imports ================================
@@ -27,7 +30,15 @@ export default class CreditFormScreen extends Component {
 
     state = {
         isDateTimePickerVisible: false,
-        pickedDate: undefined
+        pickedDate: undefined,
+        name: undefined,
+        nit: undefined,
+        incomes: undefined
+    }
+
+    constructor(props) {
+        super(props);
+        validations = new Validations();
     }
 
     componentDidMount() {
@@ -45,12 +56,47 @@ export default class CreditFormScreen extends Component {
 
     handleDatePicked = date => {
         let datePicked = date.getDate() + '-' + (date.getMonth() + 1) + '-' + date.getFullYear();
-        console.log("picked date: " + datePicked);
         this.hideDateTimePicker();
         this.setState({
             pickedDate: datePicked
         })
     };
+
+    attempCredit = () => {
+        let obj = {
+            name: this.state.name,
+            nit: this.state.nit,
+            incomes: this.state.incomes,
+            laboralDate: this.state.pickedDate
+        }
+        let val = validations.validateCreditForm(obj);
+        if (val.validationsOK) {
+            let creditResponse = validations.approveCredit(obj);
+            Navigation.push(this.props.componentId, {
+                component: {
+                    name: 'navigation.secure.bank.CreditStatusScreen',
+                    passProps: {
+                        success: creditResponse.approved,
+                        creditValue: creditResponse.credit
+                    },
+                    options: {
+                        topBar: {
+                            visible: false,
+                            height: 0
+                        }
+                    }
+                }
+            });
+        } else {
+            Alert.alert("Atención.",
+                val.message,
+                [
+                    { text: 'Continuar', onPress: () => console.log("Inconsistencias CreditFormScreen") },
+                ],
+                { cancelable: true }
+            );
+        }
+    }
 
     render() {
         return (
@@ -64,16 +110,16 @@ export default class CreditFormScreen extends Component {
                     <TopLogo small={true} />
                     <View style={styles.textBanner}>
                         <Text style={styles.titleBig}>Formulario de solicitud de crédito.</Text>
-                        <CustomInputText small={true} itPlaceholderColor={"#FE5D26"} underlineColor={"#FE5D26"} label={"Nombre de la empresa donde labora"} keyboardType={"default"} mandatory={true} aditionalStyle={{ marginTop: DEVICE_HEIGHT * 0.12 }} />
-                        <CustomInputText small={true} itPlaceholderColor={"#FE5D26"} underlineColor={"#FE5D26"} label={"NIT de la empresa donde labora"} keyboardType={"number-pad"} mandatory={true} aditionalStyle={{ marginTop: DEVICE_HEIGHT * 0.02 }} />
-                        <CustomInputText small={true} itPlaceholderColor={"#FE5D26"} underlineColor={"#FE5D26"} label={"Ingresos actuales por salario"} keyboardType={"number-pad"} mandatory={true} aditionalStyle={{ marginTop: DEVICE_HEIGHT * 0.02 }} />
+                        <CustomInputText small={true} itPlaceholderColor={"#FE5D26"} underlineColor={"#FE5D26"} label={"Nombre de la empresa donde labora"} keyboardType={"default"} mandatory={true} aditionalStyle={{ marginTop: DEVICE_HEIGHT * 0.12 }} onChangeText={(text) => this.setState({ name: text })} />
+                        <CustomInputText small={true} itPlaceholderColor={"#FE5D26"} underlineColor={"#FE5D26"} label={"NIT de la empresa donde labora"} keyboardType={"number-pad"} mandatory={true} aditionalStyle={{ marginTop: DEVICE_HEIGHT * 0.02 }} onChangeText={(text) => this.setState({ nit: text })} />
+                        <CustomInputText small={true} itPlaceholderColor={"#FE5D26"} underlineColor={"#FE5D26"} label={"Ingresos actuales por salario"} keyboardType={"number-pad"} mandatory={true} aditionalStyle={{ marginTop: DEVICE_HEIGHT * 0.02 }} onChangeText={(text) => this.setState({ incomes: text })} />
                         <View>
-                            <CustomInputText small={true} tiValue={this.state.pickedDate} itPlaceholderColor={"#FE5D26"} underlineColor={"#FE5D26"} label={"Fecha de ingreso a la empresa donde labora"} keyboardType={"number-pad"} mandatory={true} aditionalStyle={{ marginTop: DEVICE_HEIGHT * 0.02 }} />
+                            <CustomInputText small={true} tiValue={this.state.pickedDate} itPlaceholderColor={"#FE5D26"} underlineColor={"#FE5D26"} label={"Fecha de ingreso a la empresa donde labora"} keyboardType={"default"} mandatory={true} aditionalStyle={{ marginTop: DEVICE_HEIGHT * 0.02 }} onChangeText={(text) => this.setState({ laboralDate: text })} />
                             <TouchableOpacity style={styles.calendarContainer} onPress={this.showDateTimePicker}>
                                 <Image source={calendarIcon} style={styles.calendarIconStyle} />
                             </TouchableOpacity>
                         </View>
-                        <CTAButton aditionalStyle={{ marginTop: DEVICE_HEIGHT * 0.12 }} small={true} buttonColor={"#FE5D26"} buttonTextColor={"#FFFFFF"} label={"ENVIAR"} onPress={this.alertWithDate} />
+                        <CTAButton aditionalStyle={{ marginTop: DEVICE_HEIGHT * 0.12 }} small={true} buttonColor={"#FE5D26"} buttonTextColor={"#FFFFFF"} label={"ENVIAR"} onPress={this.attempCredit} />
                     </View>
                 </View>
             </View>

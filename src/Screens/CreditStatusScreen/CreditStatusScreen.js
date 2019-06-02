@@ -14,6 +14,7 @@ import {
     Image
 } from 'react-native';
 //================================ Component Importation ================================
+import { Navigation } from "react-native-navigation";
 import CTAButton from '../../Components/CTAButton/CTAButton';
 //================================ Multimedia Importation ================================
 import success from '../../resources/success.png';
@@ -22,7 +23,7 @@ import fail from '../../resources/fail.png';
 const DEVICE_WIDTH = Dimensions.get("window").width;
 const DEVICE_HEIGHT = Dimensions.get("window").height;
 
-const successTitle = "Felicitaciones, tu solicitud de crédito ha sido pre aprovada";
+const successTitle = "Felicitaciones, tu solicitud de crédito ha sido pre aprovada por un valor de: ";
 const successText = "A continuación te puedes acercar a cualquiera de nuestras sucursales para continuar con el papeleo y tranquilo, ya no tienes que llenar mucho más para hacer efectiva tu solicitud!";
 const failTitle = "Lo sentimos, tu solicitud de crédito no ha sido aprovada";
 const failText = "Intenta mejorar tu Score de crédito o de validar qué parámetros son escenciales para que puedas aplicar a este tipo de crédito, ánimo la próxima será posible!";
@@ -39,6 +40,27 @@ export default class CreditStatusScreen extends Component {
         StatusBar.setBarStyle('dark-content', true);
     }
 
+    toMainMenu = () => {
+        Navigation.setStackRoot(this.props.componentId, [
+            {
+                component: {
+                    name: 'navigation.secure.bank.MainScreen',
+                    options: {
+                        animations: {
+                            setStackRoot: {
+                                enabled: true
+                            }
+                        },
+                        topBar: {
+                            visible: false,
+                            height: 0
+                        }
+                    }
+                }
+            }
+        ]);
+    }
+
     render() {
 
         let title = this.props.success ? successTitle : failTitle;
@@ -48,10 +70,10 @@ export default class CreditStatusScreen extends Component {
         return (
             <View style={styles.main}>
                 <View style={[styles.contentContainer, Platform.OS == 'ios' ? { marginTop: 16 } : undefined]}>
-                    <Text style={titleStyle}>{title}</Text>
+                    <Text style={titleStyle}>{title} {this.props.success ? '$' + this.props.creditValue : undefined}</Text>
                     <Text style={styles.textStyle}>{text}</Text>
-                    <Image source={image} style={styles.imageStyle} resizeMode={'contain'}/>
-                    <CTAButton aditionalStyle={{ marginTop: DEVICE_HEIGHT * 0.16 }} small={true} buttonColor={"#FE5D26"} buttonTextColor={"#FFFFFF"} label={"CONTINUAR"} onPress={this.alertWithDate} />
+                    <Image source={image} style={styles.imageStyle} resizeMode={'contain'} />
+                    <CTAButton aditionalStyle={{ marginTop: DEVICE_HEIGHT * 0.16 }} small={true} buttonColor={this.props.success ? "#7EBC89" : "#FE5D26"} buttonTextColor={"#FFFFFF"} label={"CONTINUAR"} onPress={this.toMainMenu} />
                 </View>
             </View>
         );
@@ -79,7 +101,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         marginTop: DEVICE_HEIGHT * 0.09,
     },
-    failTitleStyle:{
+    failTitleStyle: {
         color: '#FE5D26',
         fontFamily: 'Lato-Bold',
         fontSize: DEVICE_HEIGHT * 0.028,
