@@ -19,7 +19,7 @@ Navigation.events().registerAppLaunchedListener(() => {
             stack: {
                 children: [{
                     component: {
-                        name: "navigation.secure.bank.LoginScreen"
+                        name: "navigation.secure.bank.MainScreen"
                     }
                 }],
                 options: {
