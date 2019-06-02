@@ -126,12 +126,6 @@ export default class FABMenu extends Component {
                                 <Animated.Image source={menuIcon} style={[styles.burgerIcon, burgerAnimatedStyle]} />
                             </TouchableOpacity>)
                 }
-                {
-                    this.state.menuOpen ? (
-                        <View style={{position: 'absolute', elevation: 18, zIndex: 100, width: '100%', height: '100%', justifyContent: 'flex-end'}}><Animated.Image source={menuIcons} style={[styles.iconsStyle]} /></View>)
-                        :
-                        undefined
-                }
             </View>
         );
     }
